@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/heart.xml -->
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:height="256dp"
+    android:width="256dp"
+
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+<!--
+ intrinsic size of the drawable
+    android:height="256dp"
+    android:width="256dp"
+
+ size of the virtual canvas
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+
+-->
+    <path
+        android:fillColor="#848484"
+        android:pathData="M257.987,141.49c-25.557,0-46.275,20.717-46.275,46.275c0,17.682,9.922,33.043,24.498,40.834v10.424
+	c0,0.75,0.613,1.361,1.361,1.361h2.664l-0.006,89.586c0,0.748,0.463,1.762,1.027,2.252l7.656,6.637v-82.006
+	c0-1.502,1.219-2.723,2.721-2.723c1.506,0,2.723,1.221,2.723,2.723v86.724l5.607,4.861c0.564,0.49,1.518,0.523,2.115,0.072
+	l12.563-9.447c0.598-0.451,1.088-1.432,1.088-2.18l0.006-96.5h2.668c0.746,0,1.361-0.611,1.361-1.361v-10.424
+	c14.574-7.791,24.498-23.152,24.498-40.834C304.263,162.207,283.544,141.49,257.987,141.49z M257.987,171.658
+	c-4.385,0-7.939-3.553-7.939-7.938c0-4.387,3.555-7.939,7.939-7.939s7.938,3.553,7.938,7.939
+	C265.925,168.105,262.372,171.658,257.987,171.658z"/>
+
+</vector>

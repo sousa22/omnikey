@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="nav_menu_items">
+        <item>Category</item>
+        <item>Download</item>
+        <item>Route</item>
+        <item>Delete</item>
+        <item>update</item>
+        <item>Pirocas no cu do Renato</item>
+
+    </string-array>
+</resources>
