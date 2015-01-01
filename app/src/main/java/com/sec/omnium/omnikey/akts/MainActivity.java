@@ -1,7 +1,9 @@
 package com.sec.omnium.omnikey.akts;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -9,7 +11,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.sec.omnium.omnikey.R;
@@ -207,23 +209,24 @@ public class MainActivity extends Activity{
 //    }
 
 
-    public static class FragmentHome extends Fragment {
+    public class FragmentHome extends Fragment {
 
 
 
-        private ImageView mlogo;
+        private ImageView mLogo;
         private CardView mCard;
         private LinearLayout mCardLayout;
 
         private AnimatorSet animLogo;
         private AnimatorSet animCard;
-        private AnimatorSet animCardLayout;
 
+        float logoY;
         int fragmentWidth;
         int fragmentHeight;
         float cardYMov;
         float cardYSize;
         int calls;
+        int i = 0;
 
         public static final String IMAGE_RESOURCE_ID = "iconResourceID";
         public static final String ITEM_NAME = "itemName";
@@ -235,62 +238,149 @@ public class MainActivity extends Activity{
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            View rootView = inflater.inflate(R.layout.main_fragment, container, false);
+            final View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
 
-            mlogo = (ImageView) rootView.findViewById(R.id.logoMain);
+            mLogo = (ImageView) rootView.findViewById(R.id.logoMain);
             mCard = (CardView) rootView.findViewById(R.id.card_view);
+            mCardLayout = (LinearLayout) rootView.findViewById(R.id.card_layout);
+
 
 
 
             animLogo = new AnimatorSet();
 
-            ObjectAnimator resetPosLogo = ObjectAnimator.ofFloat(mlogo, "translationY", 0, 0);
-            ObjectAnimator resetAlphaLogo = ObjectAnimator.ofFloat(mlogo, "alpha", 0, 0);
-            ObjectAnimator resetPosZLogo = ObjectAnimator.ofFloat(mlogo, "elevation", 0, 1);
+            final RelativeLayout.LayoutParams paramsLogo = (RelativeLayout.LayoutParams) mLogo.getLayoutParams();
+            int logoStartYMargin = paramsLogo.topMargin;
 
-            ObjectAnimator appearLogo = ObjectAnimator.ofFloat(mlogo, "alpha", 0, 1);
+            final ValueAnimator resetPosYLogo = ValueAnimator.ofInt(logoStartYMargin, logoStartYMargin);
+            resetPosYLogo.setTarget(mLogo);
+
+            final ObjectAnimator resetAlphaLogo = ObjectAnimator.ofFloat(mLogo, "alpha", 0, 0);
+            ObjectAnimator resetPosZLogo = ObjectAnimator.ofFloat(mLogo, "elevation", 0, 5);
+
+            ObjectAnimator appearLogo = ObjectAnimator.ofFloat(mLogo, "alpha", 0, 1);
             appearLogo.setDuration(200);
-            appearLogo.setStartDelay(100);
+            appearLogo.setStartDelay(700);
 
-            final ObjectAnimator moveUp = ObjectAnimator.ofFloat(mlogo, "translationY", 0, 0 - (fragmentHeight / 4));
+
+            final ValueAnimator moveUp = ValueAnimator.ofInt(0, 0);
+            moveUp.setTarget(mLogo);
             moveUp.setDuration(600);
             moveUp.setStartDelay(1000);
 
-            animLogo.play(resetAlphaLogo).with(resetPosLogo).with(resetPosZLogo);
+
+            animLogo.play(resetAlphaLogo).with(resetPosYLogo).with(resetPosZLogo);
             animLogo.play(appearLogo).after(resetAlphaLogo);
             animLogo.play(moveUp).after(appearLogo);
 
+
+            moveUp.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    paramsLogo.topMargin = (Integer) animation.getAnimatedValue();
+                    mLogo.requestLayout();
+                }
+            });
+
+            resetPosYLogo.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    paramsLogo.topMargin = (Integer) animation.getAnimatedValue();
+                    mLogo.requestLayout();
+                }
+            });
 
 
 
             animCard = new AnimatorSet();
 
+            final RelativeLayout.LayoutParams paramsCard = (RelativeLayout.LayoutParams) mCard.getLayoutParams();
+            final int cardStartYMargin = 0;
+            int cardStartXMargin = 0;
+
+            final ValueAnimator resetPosXCard = ValueAnimator.ofInt(cardStartXMargin, cardStartXMargin);
+            resetPosXCard.setTarget(mCard);
+
+            final ValueAnimator resetPosYCard = ValueAnimator.ofInt(cardStartYMargin, cardStartYMargin);
+            resetPosYCard.setTarget(mCard);
+
+
             final ObjectAnimator resetAlphaCard = ObjectAnimator.ofFloat(mCard, "alpha", 1, 1);
             final ObjectAnimator resetSizeXCard = ObjectAnimator.ofFloat(mCard, "scaleX", 0, 0);
             final ObjectAnimator resetSizeYCard = ObjectAnimator.ofFloat(mCard, "scaleY", 0, 0);
-            final ObjectAnimator resetPosXCard = ObjectAnimator.ofFloat(mCard, "translationX", 0, 0);
-            final ObjectAnimator resetPosYCard = ObjectAnimator.ofFloat(mCard, "translationY", cardYMov, cardYMov);
 
             ObjectAnimator appearCard = ObjectAnimator.ofFloat(mCard, "alpha", 1, 1);
             appearCard.setStartDelay(1600);
 
-            ObjectAnimator strechX = ObjectAnimator.ofFloat(mCard, "scaleX", 0, 1);
-            strechX.setDuration(100);
-            strechX.setStartDelay(0);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCard, "scaleX", 0, 1);
+            scaleX.setDuration(500);
+            scaleX.setStartDelay(200);
 
-            final ObjectAnimator strechY = ObjectAnimator.ofFloat(mCard, "scaleY", 0, 1);
-            strechY.setDuration(300);
-            strechY.setStartDelay(0);
+            final ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCard, "scaleY", 0, 1);
+            scaleY.setDuration(500);
+            scaleY.setStartDelay(400);
 
-            final ObjectAnimator moveDown = ObjectAnimator.ofFloat(mCard, "translationY", cardYMov, cardYMov - (fragmentHeight / 2));
-            strechX.setDuration(600);
-            strechX.setStartDelay(200);
+            final ValueAnimator moveDown = ValueAnimator.ofInt(0, 0);
+            moveDown.setTarget(mCard);
+            moveDown.setDuration(500);
+            moveDown.setStartDelay(400);
 
             animCard.play(resetAlphaCard).with(resetSizeXCard).with(resetSizeYCard).with(resetPosXCard).with(resetPosYCard);
             animCard.play(appearCard).after(resetAlphaCard);
-            animCard.play(strechX).with(strechY).with(moveDown);
-            animCard.play(strechX).after(appearCard);
+            animCard.play(scaleX).with(scaleY).with(moveDown);
+            animCard.play(scaleX).after(appearCard);
+
+            resetPosYCard.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    paramsCard.topMargin = (Integer) animation.getAnimatedValue();
+                    mCard.requestLayout();
+                    mCardLayout.requestLayout();
+                }
+            });
+
+            resetPosXCard.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    paramsCard.leftMargin = (Integer) animation.getAnimatedValue();
+                    mCard.requestLayout();
+                    mCardLayout.requestLayout();
+                }
+            });
+
+            moveDown.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    paramsCard.topMargin = (Integer) animation.getAnimatedValue();
+                    mCard.requestLayout();
+                    mCardLayout.requestLayout();
+                }
+            });
+
+
+
+            scaleX.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    mCard.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
 
 
             rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -301,26 +391,30 @@ public class MainActivity extends Activity{
                     fragmentWidth = getView().getWidth();
                     fragmentHeight = getView().getHeight();
 
-                    Log.d("MEU LOG", "Card Wight:" + fragmentWidth);
+                    RelativeLayout.LayoutParams paramsCardTemp = (RelativeLayout.LayoutParams) mCard.getLayoutParams();
+                    paramsCard.width = fragmentWidth - (fragmentWidth / 10);
+                    paramsCard.height = fragmentHeight - (fragmentHeight/ 3);
+                    mCard.setLayoutParams(paramsCard);
 
 
-                    mlogo = (ImageView) getView().findViewById(R.id.logoMain);
+                    mLogo = (ImageView) getView().findViewById(R.id.logoMain);
+                    logoY = mLogo.getY();
 
-                    cardYMov = (mlogo.getY() - (mlogo.getHeight() / 2));
-                    cardYSize = ((fragmentHeight /2) - (fragmentHeight /4));
-
-                    mCard.setY(mlogo.getY() + ((mlogo.getHeight() / 2) - mCard.getY()));
+                    cardYMov = (logoY - (mLogo.getHeight() / 3));
 
                     mCard.setScaleX(0);
                     mCard.setScaleY(0);
 
-                    cardYSize = pxToDp((int) cardYSize);
 
-                    resetPosYCard.setFloatValues(cardYMov, cardYMov - (fragmentHeight / 2));
-                    moveDown.setFloatValues(cardYMov, cardYMov - (fragmentHeight / 2));
-                    moveUp.setFloatValues(0, 0 - (fragmentHeight / 4));
+                    resetPosXCard.setIntValues((int) 0, (int) 0);
+                    resetPosYCard.setIntValues((int) cardStartYMargin, (int) (logoY - (fragmentHeight / 4)));
+                    moveDown.setIntValues((int) 0,  (int) cardYMov);
 
-                    moveDown.setFloatValues(0, cardYMov);
+                    resetPosYLogo.setIntValues((int) logoY, (int) logoY);
+                    moveUp.setIntValues((int) logoY, (int) (logoY - (fragmentHeight / 4)));
+
+
+
 
                     if(fragmentWidth > 0)
                     {
@@ -330,24 +424,30 @@ public class MainActivity extends Activity{
             });
 
 
-            mlogo.setOnClickListener(new View.OnClickListener() {
+
+            mLogo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    Log.d("MEU LOG", "Card Height:" + mCard.getHeight());
 //                    Log.d("MEU LOG", "Card Wight:" + mCard.getWidth());
 
-                    animLogo.start();
-                    animCard.start();
+//                    mCardLayout.setVisibility(View.GONE);
+                    mCard.setVisibility(View.GONE);
+
+                       animLogo.start();
+                       animCard.start();
+                       i++;
 
                 }
             });
+
+            final Intent intent = new Intent(getActivity(), NavigationMain.class);
 
             Button btn1 = (Button) rootView.findViewById(R.id.btn1);
             btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(getActivity(), NavigationMain.class);
                     startActivity(intent);
 
 //                    Fragment newFragment = new LoginFragment();

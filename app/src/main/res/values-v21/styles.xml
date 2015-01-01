@@ -2,8 +2,9 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!--<style name="AppTheme" parent="android:Theme.Material.NoActionBar">-->
-        <item name="colorPrimary">#4CAF50</item>
-        <item name="colorPrimaryDark">#388E3C</item>
+        <item name="android:colorPrimary">#4CAF50</item>
+        <item name="android:colorPrimaryDark">#388E3C</item>
+        <item name="android:navigationBarColor">#388E3C</item>
 
         <!-- lag indicating whether this window requests that content changes be performed
        as scene changes with transitions -->
