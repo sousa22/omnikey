@@ -11,7 +11,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/clear"
-        android:src="@drawable/omnikey_logo"
+        android:src="@drawable/omnikey_logo_sm"
         android:elevation="5dp"
         android:translationZ="1dp"
         android:layout_alignParentTop="true"
