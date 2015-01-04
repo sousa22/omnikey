@@ -3,6 +3,7 @@
     package="com.sec.omnium.omnikey" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".akts.MainActivity"
+            android:windowSoftInputMode="stateHidden"
             android:icon="@drawable/ic_omnikey"
             android:label="@string/app_name" >
             <intent-filter>

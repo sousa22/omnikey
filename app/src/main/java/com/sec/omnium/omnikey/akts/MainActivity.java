@@ -47,8 +47,7 @@ public class MainActivity extends Activity{
             super.onActivityCreated(savedInstanceState);
             final View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
-
-            Utils.MyAsyncTask task = new Utils.MyAsyncTask(getBaseContext(), rootView);
+            Utils.SetLoginScreen task = new Utils.SetLoginScreen(getActivity(), rootView);
             task.execute();
 
 

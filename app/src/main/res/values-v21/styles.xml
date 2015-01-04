@@ -24,10 +24,10 @@
 
         <!-- Flag indicating whether this window's Action Bar content should overlay -->
         <item name="android:windowContentOverlay">@null</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
 
     </style>
-
-
 
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>

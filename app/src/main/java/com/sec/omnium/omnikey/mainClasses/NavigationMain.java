@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -53,6 +54,13 @@ public class NavigationMain extends ActionBarActivity{
 
         setContentView(R.layout.navigation_main);
 
+        Bundle b = getIntent().getExtras();
+        String email = b.getString("email");
+        String name = b.getString("name");
+        TextView useremail = (TextView) findViewById(R.id.txt_user_lastname_drawer);
+        TextView username = (TextView) findViewById(R.id.txt_user_name_drawer);
+        useremail.setText(email);
+        username.setText(name);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,13 +113,7 @@ public class NavigationMain extends ActionBarActivity{
                 mNavigationAdapter.notifyDataSetChanged();
                 supportInvalidateOptionsMenu();
             }
-            public void onDrawerSlide(View draverView, float slideOffSet){
 
-                View view = getWindow().getDecorView();
-                final FloatingActionsMenu actionMain = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
-
-//                Log.d("DRAWER", "Offset: " + slideOffSet);
-            }
         };
 
         mLayoutDrawer.setDrawerListener(actionBarDrawerToggle);
