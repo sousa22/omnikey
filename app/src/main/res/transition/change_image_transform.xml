@@ -1,0 +1,13 @@
+<!-- res/transition/change_image_transform.xml -->
+<!-- (see also Shared Transitions below) -->
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="1000"
+        android:interpolator="@android:interpolator/overshoot" />
+</transitionSet>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<transitionManager xmlns:android="http://schemas.android.com/apk/res/android">-->
+
+<!--</transitionManager>-->

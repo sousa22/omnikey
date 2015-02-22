@@ -15,5 +15,7 @@
     <string name="nav_drawer_close">Navigation Close</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_menu">Menu</string>
+    <string name="title_activity_friends">FriendsActivity</string>
 
 </resources>
