@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sec.omnium.omnikey.R;
+import com.sec.omnium.omnikey.hce.HceMainActivity;
 
 
 public class MenuActivity extends Activity {
@@ -19,6 +20,7 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         final Intent intent = new Intent(this, FriendsActivity.class);
+        final Intent intentNFC = new Intent(this, HceMainActivity.class);
 
         TextView name = (TextView) findViewById(R.id.name);
         TextView email = (TextView) findViewById(R.id.email);
@@ -52,6 +54,31 @@ public class MenuActivity extends Activity {
 //                        Pair.create(card, "card"));
 
                 startActivity(intent);
+            }
+        });
+
+        final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.actionB);
+        actionB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+//                Bundle b = new Bundle();
+//
+//                b.putString("email", "sousandrei@gmail.com");
+//                b.putString("name", "Andrei");
+//
+//                intent.putExtras(b);
+
+//                final View card = rootView.findViewById(R.id.card_view2);
+//                final View logo = rootView.findViewById(R.id.logoMain);
+
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((android.app.Activity) mContext,
+//                        Pair.create(logo, "logo"),
+//                        Pair.create(card, "card"));
+
+                startActivity(intentNFC);
             }
         });
 

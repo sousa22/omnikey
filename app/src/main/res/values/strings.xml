@@ -17,5 +17,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_menu">Menu</string>
     <string name="title_activity_friends">FriendsActivity</string>
+    <string name="title_activity_hce">HceActivity</string>
+    <string name="card_title">Akuntsu Omnikey</string>
+    <string name="password">Password</string>
+    <string name="service_name">Omnikey</string>
 
 </resources>
