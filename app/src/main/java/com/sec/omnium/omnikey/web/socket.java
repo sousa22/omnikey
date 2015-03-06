@@ -35,7 +35,7 @@ import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DHParameterSpec;
 
-import static com.sec.omnium.omnikey.UI.utils.alert;
+import static com.sec.omnium.omnikey.UI.Utils.alert;
 
 public class socket {
 
@@ -63,92 +63,85 @@ public class socket {
             EditText passwordField = (EditText) rootView.findViewById(R.id.pass);
             pass = passwordField.getText().toString();
 
-            final Intent intent = new Intent(mContext, MenuActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            final Intent intent = new Intent(mContext, MenuActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//            Bundle b = new Bundle();
+//
+//            b.putString("email", "email");
+//            b.putString("name", "name");
+//
+//            intent.putExtras(b);
+//            mContext.startActivity(intent);
 
-            Bundle b = new Bundle();
 
-            b.putString("email", "email");
-            b.putString("name", "name");
-
-            intent.putExtras(b);
-            mContext.startActivity(intent);
+            try {
+                mSocket = IO.socket("http://192.168.0.11:8080");
 
 
-//          O Login esta funcionando na ultima versao que ainda nao foi liberada
-//          por enquanto esse codigo acima e um placeholder
-//
-//
-//            try {
-//                mSocket = IO.socket("http://192.168.0.11:8080");
-//
-//
-//                mSocket.connect();
-//
-//                //                mSocket.emit("init", "message");
-//
-//                // Sending a login
-//                JSONObject obj = new JSONObject();
-//                obj.put("login", login);
-//                obj.put("pass", pass);
-//
-//                mSocket.emit("login", obj);
-//
-//
-//                // Receiving a sockete disconnect
-//                mSocket.on(mSocket.EVENT_DISCONNECT, new Emitter.Listener() {
-//
-//                    @Override
-//                    public void call(Object... args) {
-//                        Log.d("DISCONNECT", "ORRA");
-//                        mSocket.off("login");
-//                        mSocket.off(mSocket.EVENT_DISCONNECT);
-//                    }
-//
-//                });
-//
-//                // Receiving a login response
-//                mSocket.on("login", new Emitter.Listener() {
-//
-//                    @Override
-//                    public void call(Object... args) {
-//                        JSONObject obj = (JSONObject) args[0];
-//                        Log.d("LOGIN", obj.toString());
-//
-//                        try {
-//
-//                            if (obj.getBoolean("successful") == true) {
-//
-//                                final Intent intent = new Intent(mContext, MenuActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//                                Bundle b = new Bundle();
-//
-//                                String email = obj.getJSONObject("user").getJSONObject("local").getString("email").toString();
-//                                String name = obj.getJSONObject("user").getJSONObject("local").getString("name").toString();
-//
-//                                b.putString("email", email);
-//                                b.putString("name", name);
-//
-//                                intent.putExtras(b);
-//                                mContext.startActivity(intent);
-//
-//                            } else {
-//                                alert(mContext, obj.getString("msg"), "ERROR: " + obj.getInt("error"));
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-//
-//            } catch (URISyntaxException e) {
-//                alert(mContext, e.toString(), "Socket Error");
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+                Socket connecting = mSocket.connect();
+
+                // Sending a login
+                JSONObject obj = new JSONObject();
+                obj.put("login", login);
+                obj.put("pass", pass);
+
+                mSocket.emit("login", obj);
+
+
+                // Receiving a socket disconnect
+                mSocket.on(mSocket.EVENT_DISCONNECT, new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                        mSocket.off("login");
+                        mSocket.off(mSocket.EVENT_DISCONNECT);
+                    }
+
+                });
+
+                // Receiving a login response
+                mSocket.on("login", new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                        JSONObject obj = (JSONObject) args[0];
+                        Log.d("LOGIN", obj.toString());
+
+                        try {
+
+                            if (obj.getBoolean("successful") == true) {
+
+                                final Intent intent = new Intent(mContext, MenuActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                Bundle b = new Bundle();
+
+                                String email = obj.getJSONObject("user").getJSONObject("local").getString("email").toString();
+                                String name = obj.getJSONObject("user").getJSONObject("local").getString("name").toString();
+
+                                b.putString("email", email);
+                                b.putString("name", name);
+
+                                intent.putExtras(b);
+                                mContext.startActivity(intent);
+
+                            } else {
+                                alert(mContext, obj.getString("msg"), "ERROR: " + obj.getInt("error"));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+
+            } catch (URISyntaxException e) {
+                alert(mContext, e.toString(), "Socket Error");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
@@ -161,9 +154,48 @@ public class socket {
 
     public static class SocketTest extends AsyncTask<Void, Void, JSONObject> {
 
-        String publicKeyString = "INSERT PUBLIC KEY HERE";
+        String publicKeyString = "MIIECzCCAvOgAwIBAgIJAL8DKU2DK7UkMA0GCSqGSIb3DQEBCwUAMIGbMQswCQYDVQQGEwJERjEZ\n" +
+                "MBcGA1UECAwQRGlzdHJpdG8gRmVkZXJhbDERMA8GA1UEBwwIQnJhc2lsaWExFjAUBgNVBAoMDUFr\n" +
+                "dW50c3UgR3JvdXAxDTALBgNVBAsMBE9tbmkxEjAQBgNVBAMMCUFLVFMtT01OSTEjMCEGCSqGSIb3\n" +
+                "DQEJARYUc291c2FuZHJlaUBnbWFpbC5jb20wHhcNMTUwMjE4MDExNDU3WhcNMTUwMzIwMDExNDU3\n" +
+                "WjCBmzELMAkGA1UEBhMCREYxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxETAPBgNVBAcMCEJy\n" +
+                "YXNpbGlhMRYwFAYDVQQKDA1Ba3VudHN1IEdyb3VwMQ0wCwYDVQQLDARPbW5pMRIwEAYDVQQDDAlB\n" +
+                "S1RTLU9NTkkxIzAhBgkqhkiG9w0BCQEWFHNvdXNhbmRyZWlAZ21haWwuY29tMIIBIjANBgkqhkiG\n" +
+                "9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3APhSSQxQsG4UFXUq7/21JLsbsfhlcCbY6sOmoKljds8vC62\n" +
+                "OMG1DKNv/rYdr5bWv8juhYsy/t/iBQcJkYR9Xwm7ftlOKdB0q5sf5aieMO5O1h6BDkL3retsDgMi\n" +
+                "xy6pWOelzDVs1bhwFfKDzYQJmMgg4muh5duTUv6SSmPDLABHNB4+NxY3dE2z/4YbNDxlF2zWG8BY\n" +
+                "iasWQWaU/zzYkRqcNpxKKZq9kIDh4h0SsWPjqva3CaQ8uwjlITBnp5X4xvI4PS/WASNIbdWWTu/7\n" +
+                "EbJTECzZL5QBMnwqs4xgt+qEdtLNoH9xnhSZ7wJVxV8KtF2U9Qc0Vms91VwmZKT0vQIDAQABo1Aw\n" +
+                "TjAdBgNVHQ4EFgQUzMfcgrZkOdI4x4bce3D75h0mHVIwHwYDVR0jBBgwFoAUzMfcgrZkOdI4x4bc\n" +
+                "e3D75h0mHVIwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAfA1L+NMwQZO7hi5/zv4k\n" +
+                "jt/Yp9hqa4RHJyV/GOmjg6lan9R7DtCrhu2TWZjttqnIOKNgcEOwywoHFNmPOJsPjM8c32bgeD1Y\n" +
+                "SUuJGtdfzfVe4+2INogw6ncXc4VNFqvxRX+PwwrPMMwG9oa+9Yoq3BchYQVbMcbx7uIB5QiWOCOU\n" +
+                "fOt7An6Pi/3a7uYgnbx0YCqYWtScm7T6Qe9DvSbJy9MyMmdg7obJMWZAanTIgZHgZ0g6DNetxvEX\n" +
+                "ukBNqpvwC7ut2TdUeDElqplUt0lt7rMwenBGAkM5ARu6kl3gsauEbd5ByTsSQgr90h8924LCXsPp\n" +
+                "VcC1orzWP/zDZMz8BA==\n";
 
-        String privateKeyString = "INSERT PRIVATE KEY HERE";
+        String privateKeyString = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDcA+FJJDFCwbhQVdSrv/bUkuxu\n" +
+                "x+GVwJtjqw6agqWN2zy8LrY4wbUMo2/+th2vlta/yO6FizL+3+IFBwmRhH1fCbt+2U4p0HSrmx/l\n" +
+                "qJ4w7k7WHoEOQvet62wOAyLHLqlY56XMNWzVuHAV8oPNhAmYyCDia6Hl25NS/pJKY8MsAEc0Hj43\n" +
+                "Fjd0TbP/hhs0PGUXbNYbwFiJqxZBZpT/PNiRGpw2nEopmr2QgOHiHRKxY+Oq9rcJpDy7COUhMGen\n" +
+                "lfjG8jg9L9YBI0ht1ZZO7/sRslMQLNkvlAEyfCqzjGC36oR20s2gf3GeFJnvAlXFXwq0XZT1BzRW\n" +
+                "az3VXCZkpPS9AgMBAAECggEBAJBc02PkpZYB+mhsCSGw0crlpNGDwdc7DDq3sNtdQjf0VMO9er9/\n" +
+                "CscCLqhY4t2mAb7RnwBtN8bZLDrURUkAQCst/aLb/1ecehFnteRBYZsFoyEH3vJ2qoGp6bq////l\n" +
+                "9CRryvRVUdZiMNmVyTn+mzVui3VF3nMuQlrAw0igcR3a0QciUepCxYmoY2cj/5vZVY6NkV2mta8h\n" +
+                "68KX0lr0YP2pq+1fi6fWTSmSHB3eot/JiSD5o42fcPuZ3qB4ioywX2GIB7+Ne4q3PhT5fxunkCYk\n" +
+                "s1uNrOZ3rcpG5zm1bwAfQzmgtgtL3kJ2jJcgAIJSWHkfln1meU7RehIqBo3/wkECgYEA+YOSzznU\n" +
+                "eOSVNaVWe6jCoxWudGuSS7Oyd7vk9ahB5VRa1elWsQWn6M2vouPMo3B2eY854y98OEXW2YRyqhLR\n" +
+                "GfHhLfqphzkGr+p38C9sZE1YxpdNz3zGgy/zDLkrTdpSOq+rKQN6Od1kpyS/+5XuAxxU7JY17hNC\n" +
+                "i5yeBkRs60kCgYEA4bwApWLizcNrNu2vtUNXRLpkyUda9AYWXjlIriWQcpB4nMQZ4jOwaT8sITEX\n" +
+                "MivQm34/LQkiFZvWsqtU3NobRmIN1GLCiStrIz7Yy+tM5Fnai76NqqwkwLvX0k8gDGo7YuIfj33H\n" +
+                "SIDH3LSiM3/aN9qRCUJLvV3THpJ+ItciqdUCgYEAqIu2agEYg6l1GU3cg5/WCrAkrkPUCQsT7Umh\n" +
+                "Okg0ayN2ULVUeDPn3pzCnfffTjAz951Gby6ubJzQqxKLGlOnqCz5/UMrrUpaOA7cggSm5YJSC6Q9\n" +
+                "TYFt30ROnDOhCvAFR9tOdWAB+oCQ808h2GLI6pUC0OYO/AlKlGBxZq5mHPECgYA829f8vuVQ/l+4\n" +
+                "hmp53zb3A53Kml9OLRn4u076DIyeJo8uDLzBvJfSOELoi/iqASAT2/yiYrT6yHIg54pQpMj3t9Xs\n" +
+                "rdeu7bLL5NTEXaL0abk/Ndex7QlXoQ012TlVv4pVRYumvw1sYbQAr/6PDehCaL3zlhkfa91Qf8Rc\n" +
+                "Fk51JQKBgDQT1PiGysUtmbFB13VYhi2dKuoC5l6/whAeAoqHpvdfbyvCYsSLv2zXscnZW88DcbV0\n" +
+                "HKaKpELeHEITt8kWwRb/x3z1/nkYnX92u/3JeUWj27Dh8wmRbltvFnb7TJMadZsR6MWQ7EaFG0/7\n" +
+                "Fw9bO9Mflfpt9wL9+Qzkr6ynAFIj\n";
 
 
         private Context mContext;
@@ -359,7 +391,7 @@ public class socket {
 //      Funcao velha de login por metodo POST, o servidor foi atualizado para Socket.IO
 //      Usada como teste de criptografia por AES 256 e chave simentrica
 //      enviando o IMEI como texto para geracao das chaves
-//   
+//
 //
 //
 //    public static class Login extends AsyncTask<Void, Void, String> {

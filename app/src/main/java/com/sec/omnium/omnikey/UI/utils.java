@@ -9,7 +9,7 @@ import android.content.res.Resources;
 /**
  * Created by Usuario on 17/02/2015.
  */
-public class utils {
+public class Utils {
 
     public static void alert(final Context context, final String msg, final String title) {
         new Thread(){
